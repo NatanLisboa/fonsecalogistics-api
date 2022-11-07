@@ -2,24 +2,23 @@ package com.fonsecaworks.fonsecalogistics.api.controller;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fonsecaworks.fonsecalogistics.domain.model.Customer;
+import com.fonsecaworks.fonsecalogistics.domain.repository.CustomerRepository;
+
+import lombok.AllArgsConstructor;
 
 @RestController
+@AllArgsConstructor
 public class CustomerController {
-
-	@PersistenceContext
-	private EntityManager em;
+	
+	private CustomerRepository customerRepository;
 	
 	@GetMapping("/customers")
-	public List<Customer> getAllCustomers() {
-		return em.createQuery("from Customer", Customer.class)
-				.getResultList();		
+	public List<Customer> findAllCustomers() {
+		return customerRepository.findAll();		
 	}
 	
 }
