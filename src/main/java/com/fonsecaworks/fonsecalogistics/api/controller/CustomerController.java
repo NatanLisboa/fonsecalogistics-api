@@ -2,6 +2,8 @@ package com.fonsecaworks.fonsecalogistics.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,13 +42,13 @@ public class CustomerController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Customer saveNewCustomer(@RequestBody Customer customer) {
+	public Customer saveNewCustomer(@Valid @RequestBody Customer customer) {
 		return customerRepository.save(customer);
 	}
 	
 	@PutMapping("/{customerId}")
 	public ResponseEntity<Customer> updateCustomer(@PathVariable Long customerId,
-			@RequestBody Customer customerNewData) {
+			@Valid @RequestBody Customer customerNewData) {
 		
 		if (!customerRepository.existsById(customerId)) {
 			return ResponseEntity.notFound().build();
