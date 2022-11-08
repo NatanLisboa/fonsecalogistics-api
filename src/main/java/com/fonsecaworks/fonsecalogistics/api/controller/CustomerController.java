@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fonsecaworks.fonsecalogistics.api.domain.service.CustomerCatalogService;
 import com.fonsecaworks.fonsecalogistics.domain.model.Customer;
 import com.fonsecaworks.fonsecalogistics.domain.repository.CustomerRepository;
 
@@ -27,6 +28,7 @@ import lombok.AllArgsConstructor;
 public class CustomerController {
 	
 	private CustomerRepository customerRepository;
+	private CustomerCatalogService customerCatalogService;
 	
 	@GetMapping
 	public List<Customer> findAllCustomers() {
@@ -43,7 +45,7 @@ public class CustomerController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Customer saveNewCustomer(@Valid @RequestBody Customer customer) {
-		return customerRepository.save(customer);
+		return customerCatalogService.save(customer);
 	}
 	
 	@PutMapping("/{customerId}")
@@ -55,7 +57,7 @@ public class CustomerController {
 		}
 		
 		customerNewData.setId(customerId);
-		return ResponseEntity.ok(customerRepository.save(customerNewData));
+		return ResponseEntity.ok(customerCatalogService.save(customerNewData));
 		
 	}
 	
@@ -66,7 +68,7 @@ public class CustomerController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		customerRepository.deleteById(customerId);
+		customerCatalogService.delete(customerId);
 		
 		return ResponseEntity.noContent().build();
 		
