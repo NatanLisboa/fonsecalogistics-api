@@ -1,4 +1,4 @@
-package com.fonsecaworks.fonsecalogistics.api.domain.service;
+package com.fonsecaworks.fonsecalogistics.domain.service;
 
 import javax.transaction.Transactional;
 
