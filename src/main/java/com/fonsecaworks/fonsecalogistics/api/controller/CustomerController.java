@@ -27,8 +27,8 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/customers")
 public class CustomerController {
 	
-	private CustomerRepository customerRepository;
-	private CustomerCatalogService customerCatalogService;
+	private final CustomerRepository customerRepository;
+	private final CustomerCatalogService customerCatalogService;
 	
 	@GetMapping
 	public List<Customer> findAllCustomers() {

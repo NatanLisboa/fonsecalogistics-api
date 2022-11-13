@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/deliveries")
 public class DeliveryController {
 
-	private DeliveryRequestService deliveryRequestService;
+	private final DeliveryRequestService deliveryRequestService;
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)

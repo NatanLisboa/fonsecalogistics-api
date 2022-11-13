@@ -17,8 +17,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class DeliveryRequestService {
 
-	private CustomerCatalogService customerCatalogService;
-	private DeliveryRepository deliveryRepository;
+	private final CustomerCatalogService customerCatalogService;
+	private final DeliveryRepository deliveryRepository;
 	
 	@Transactional
 	public Delivery createDeliveryRequest(Delivery delivery) {

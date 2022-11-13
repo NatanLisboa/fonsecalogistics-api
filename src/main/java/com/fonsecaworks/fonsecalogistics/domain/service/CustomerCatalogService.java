@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CustomerCatalogService {
 	
-	private CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
 	
 	public Customer findCustomerById(Long customerId) {
 		return customerRepository.findById(customerId)
