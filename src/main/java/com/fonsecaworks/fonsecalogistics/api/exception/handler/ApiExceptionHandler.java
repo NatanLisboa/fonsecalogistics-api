@@ -18,6 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fonsecaworks.fonsecalogistics.api.exception.BadRequestException;
+import com.fonsecaworks.fonsecalogistics.domain.exception.CustomerNotFoundException;
 import com.fonsecaworks.fonsecalogistics.domain.exception.EmailAlreadyUsedException;
 
 import lombok.AllArgsConstructor;
@@ -65,5 +66,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(customerEmailAlreadyUsedException, badRequestException, new HttpHeaders(), status, request);
 				
 	}
+	
+	@ExceptionHandler(CustomerNotFoundException.class)
+	public ResponseEntity<Object> handleEmailAlreadyUsedException(CustomerNotFoundException customerNotFoundException, WebRequest request) {
+		
+		HttpStatus status = HttpStatus.BAD_REQUEST; 
+		 
+		BadRequestException badRequestException = new BadRequestException();
+		badRequestException.setStatus(status.value());
+		badRequestException.setDateTime(LocalDateTime.now());
+		badRequestException.setTitle(customerNotFoundException.getMessage());
+		
+		return handleExceptionInternal(customerNotFoundException, badRequestException, new HttpHeaders(), status, request);
+				
+	}
+	
+	
 	
 }
