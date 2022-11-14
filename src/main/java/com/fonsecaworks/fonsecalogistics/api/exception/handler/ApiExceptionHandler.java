@@ -1,6 +1,6 @@
 package com.fonsecaworks.fonsecalogistics.api.exception.handler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		BadRequestException badRequestException = new BadRequestException();
 		badRequestException.setStatus(status.value());
-		badRequestException.setDateTime(LocalDateTime.now());
+		badRequestException.setDateTime(OffsetDateTime.now());
 		badRequestException.setTitle("One or more fields are invalid");
 		badRequestException.setFields(invalidFields);
 		
@@ -60,7 +60,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		 
 		BadRequestException badRequestException = new BadRequestException();
 		badRequestException.setStatus(status.value());
-		badRequestException.setDateTime(LocalDateTime.now());
+		badRequestException.setDateTime(OffsetDateTime.now());
 		badRequestException.setTitle(customerEmailAlreadyUsedException.getMessage());
 		
 		return handleExceptionInternal(customerEmailAlreadyUsedException, badRequestException, new HttpHeaders(), status, request);
@@ -74,7 +74,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		 
 		BadRequestException badRequestException = new BadRequestException();
 		badRequestException.setStatus(status.value());
-		badRequestException.setDateTime(LocalDateTime.now());
+		badRequestException.setDateTime(OffsetDateTime.now());
 		badRequestException.setTitle(customerNotFoundException.getMessage());
 		
 		return handleExceptionInternal(customerNotFoundException, badRequestException, new HttpHeaders(), status, request);

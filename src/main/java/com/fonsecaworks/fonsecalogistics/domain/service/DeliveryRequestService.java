@@ -1,6 +1,6 @@
 package com.fonsecaworks.fonsecalogistics.domain.service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.transaction.Transactional;
 
@@ -27,7 +27,7 @@ public class DeliveryRequestService {
 				
 		delivery.setCustomer(customer);
 		delivery.setStatus(DeliveryStatus.PENDING);
-		delivery.setOrderDate(LocalDateTime.now());
+		delivery.setOrderDate(OffsetDateTime.now());
 		
 		return deliveryRepository.save(delivery);
 		

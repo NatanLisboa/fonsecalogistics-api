@@ -1,7 +1,7 @@
 package com.fonsecaworks.fonsecalogistics.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -54,9 +54,9 @@ public class Delivery {
 	private DeliveryStatus status;
 
 	@JsonProperty(access = Access.READ_ONLY)
-	private LocalDateTime orderDate;
+	private OffsetDateTime orderDate;
 	
 	@JsonProperty(access = Access.READ_ONLY)
-	private LocalDateTime completionDate;
+	private OffsetDateTime completionDate;
 
 }
