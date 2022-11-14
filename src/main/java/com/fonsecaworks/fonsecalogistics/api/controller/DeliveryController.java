@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fonsecaworks.fonsecalogistics.api.dto.DeliveryDTO;
+import com.fonsecaworks.fonsecalogistics.api.dto.RecipientDTO;
 import com.fonsecaworks.fonsecalogistics.domain.model.Delivery;
+import com.fonsecaworks.fonsecalogistics.domain.model.Recipient;
 import com.fonsecaworks.fonsecalogistics.domain.repository.DeliveryRepository;
 import com.fonsecaworks.fonsecalogistics.domain.service.DeliveryRequestService;
 
@@ -34,9 +37,31 @@ public class DeliveryController {
 	}
 	
 	@GetMapping("/{deliveryId}")
-	public ResponseEntity<Delivery> findDeliveryById(@PathVariable Long deliveryId) {
+	public ResponseEntity<DeliveryDTO> findDeliveryById(@PathVariable Long deliveryId) {
 		return deliveryRepository.findById(deliveryId)
-				.map(ResponseEntity::ok)
+				.map(delivery -> {
+					DeliveryDTO deliveryDTO = new DeliveryDTO();
+					deliveryDTO.setId(delivery.getId());
+					deliveryDTO.setCustomerName(delivery.getCustomer().getName());
+					deliveryDTO.setTax(delivery.getTax());
+					deliveryDTO.setStatus(delivery.getStatus());
+					deliveryDTO.setOrderDate(delivery.getOrderDate());
+					deliveryDTO.setCompletionDate(delivery.getCompletionDate());
+					
+					RecipientDTO recipientDTO = new RecipientDTO();
+					Recipient recipient = delivery.getRecipient();
+					
+					recipientDTO.setName(recipient.getName());
+					recipientDTO.setAddress(recipient.getAddress());
+					recipientDTO.setAddressComplement(recipient.getAddressComplement());
+					recipientDTO.setStreetNumber(recipient.getStreetNumber());
+					recipientDTO.setDistrict(recipient.getDistrict());
+					
+					deliveryDTO.setRecipient(recipientDTO);
+					
+					return ResponseEntity.ok(deliveryDTO);
+					
+				})
 				.orElse(ResponseEntity.notFound().build());
 	}
 	
