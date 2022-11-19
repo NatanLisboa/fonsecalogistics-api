@@ -13,8 +13,9 @@ import lombok.Setter;
 public class DeliveryDTO {
 	
 	private Long id;
-	private String customerName;
-	private RecipientDTO recipient;
+	private DeliveryCustomerDTO customer;
+	private DeliveryRecipientDTO recipient;
+	private String items;
 	private BigDecimal tax;
 	private DeliveryStatus status;
 	private OffsetDateTime orderDate;

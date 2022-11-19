@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fonsecaworks.fonsecalogistics.domain.service.CustomerCatalogService;
+import com.fonsecaworks.fonsecalogistics.api.dto.CustomerDTO;
+import com.fonsecaworks.fonsecalogistics.api.dto.input.CustomerInput;
+import com.fonsecaworks.fonsecalogistics.api.mapper.CustomerModelMapper;
 import com.fonsecaworks.fonsecalogistics.domain.model.Customer;
 import com.fonsecaworks.fonsecalogistics.domain.repository.CustomerRepository;
 
@@ -29,35 +32,40 @@ public class CustomerController {
 	
 	private final CustomerRepository customerRepository;
 	private final CustomerCatalogService customerCatalogService;
+	private final CustomerModelMapper customerModelMapper;
 	
 	@GetMapping
-	public List<Customer> findAllCustomers() {
-		return customerRepository.findAll();		
+	public List<CustomerDTO> findAllCustomers() {
+		return customerModelMapper.toDTOList(customerRepository.findAll());		
 	}
 	
 	@GetMapping("/{customerId}")
-	public ResponseEntity<Customer> findCustomerById(@PathVariable Long customerId) {
+	public ResponseEntity<CustomerDTO> findCustomerById(@PathVariable Long customerId) {
 		return customerRepository.findById(customerId)
+				.map(customerModelMapper::toDTO)
 				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());		
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Customer saveNewCustomer(@Valid @RequestBody Customer customer) {
-		return customerCatalogService.save(customer);
+	public CustomerDTO saveNewCustomer(@Valid @RequestBody CustomerInput customerInput) {
+		Customer customer = customerModelMapper.toEntity(customerInput);
+		return customerModelMapper.toDTO(customerCatalogService.save(customer));
 	}
 	
 	@PutMapping("/{customerId}")
-	public ResponseEntity<Customer> updateCustomer(@PathVariable Long customerId,
-			@Valid @RequestBody Customer customerNewData) {
+	public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable Long customerId,
+			@Valid @RequestBody CustomerInput customerNewData) {
 		
 		if (!customerRepository.existsById(customerId)) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		customerNewData.setId(customerId);
-		return ResponseEntity.ok(customerCatalogService.save(customerNewData));
+		Customer customer = customerModelMapper.toEntity(customerNewData);
+		
+		customer.setId(customerId);
+		return ResponseEntity.ok(customerModelMapper.toDTO(customerCatalogService.save(customer)));
 		
 	}
 	

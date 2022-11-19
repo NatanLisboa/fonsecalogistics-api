@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fonsecaworks.fonsecalogistics.api.dto.DeliveryDTO;
-import com.fonsecaworks.fonsecalogistics.api.dto.RecipientDTO;
+import com.fonsecaworks.fonsecalogistics.api.dto.input.DeliveryInput;
+import com.fonsecaworks.fonsecalogistics.api.mapper.DeliveryModelMapper;
 import com.fonsecaworks.fonsecalogistics.domain.model.Delivery;
-import com.fonsecaworks.fonsecalogistics.domain.model.Recipient;
 import com.fonsecaworks.fonsecalogistics.domain.repository.DeliveryRepository;
 import com.fonsecaworks.fonsecalogistics.domain.service.DeliveryRequestService;
 
@@ -30,44 +30,28 @@ public class DeliveryController {
 
 	private final DeliveryRepository deliveryRepository;
 	private final DeliveryRequestService deliveryRequestService;
+	private final DeliveryModelMapper deliveryModelMapper;
 	
 	@GetMapping
-	public List<Delivery> findAllDeliveries() {
-		return deliveryRepository.findAll();
+	public List<DeliveryDTO> findAllDeliveries() {
+		return deliveryModelMapper.toDTOList(deliveryRepository.findAll());
 	}
 	
 	@GetMapping("/{deliveryId}")
 	public ResponseEntity<DeliveryDTO> findDeliveryById(@PathVariable Long deliveryId) {
 		return deliveryRepository.findById(deliveryId)
 				.map(delivery -> {
-					DeliveryDTO deliveryDTO = new DeliveryDTO();
-					deliveryDTO.setId(delivery.getId());
-					deliveryDTO.setCustomerName(delivery.getCustomer().getName());
-					deliveryDTO.setTax(delivery.getTax());
-					deliveryDTO.setStatus(delivery.getStatus());
-					deliveryDTO.setOrderDate(delivery.getOrderDate());
-					deliveryDTO.setCompletionDate(delivery.getCompletionDate());
-					
-					RecipientDTO recipientDTO = new RecipientDTO();
-					Recipient recipient = delivery.getRecipient();
-					
-					recipientDTO.setName(recipient.getName());
-					recipientDTO.setAddress(recipient.getAddress());
-					recipientDTO.setAddressComplement(recipient.getAddressComplement());
-					recipientDTO.setStreetNumber(recipient.getStreetNumber());
-					recipientDTO.setDistrict(recipient.getDistrict());
-					
-					deliveryDTO.setRecipient(recipientDTO);
-					
+					DeliveryDTO deliveryDTO = deliveryModelMapper.toDTO(delivery);
 					return ResponseEntity.ok(deliveryDTO);
-					
 				})
 				.orElse(ResponseEntity.notFound().build());
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Delivery createDeliveryRequest(@Valid @RequestBody Delivery delivery) {
-		return deliveryRequestService.createDeliveryRequest(delivery);
+	public DeliveryDTO createDeliveryRequest(@Valid @RequestBody DeliveryInput deliveryInput) {
+		Delivery newDelivery = deliveryModelMapper.toEntity(deliveryInput);
+		Delivery requestedDelivery = deliveryRequestService.createDeliveryRequest(newDelivery);
+		return deliveryModelMapper.toDTO(requestedDelivery);
 	}
 }

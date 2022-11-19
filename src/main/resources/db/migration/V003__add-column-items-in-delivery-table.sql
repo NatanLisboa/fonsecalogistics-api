@@ -1,0 +1,1 @@
+alter table delivery add column items varchar(255) not null;
