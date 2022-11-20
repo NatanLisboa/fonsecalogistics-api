@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.fonsecaworks.fonsecalogistics.domain.exception.BusinessRuleException;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,6 +64,25 @@ public class Delivery {
 		this.getOccurrences().add(occurrence);
 		
 		return occurrence;
+	}
+
+	public void checkout() {
+		
+		if (cannotBeCompleted()) {
+			throw new BusinessRuleException("Delivery cannot be completed");
+		}
+		
+		this.setStatus(DeliveryStatus.COMPLETED);
+		this.setCompletionDate(OffsetDateTime.now());
+		
+	}
+	
+	public boolean canBeCompleted() {
+		return DeliveryStatus.PENDING.equals(this.getStatus());
+	}
+	
+	public boolean cannotBeCompleted() {
+		return !canBeCompleted();
 	}
 
 }

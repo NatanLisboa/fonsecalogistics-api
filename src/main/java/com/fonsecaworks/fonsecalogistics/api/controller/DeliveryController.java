@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,6 +20,7 @@ import com.fonsecaworks.fonsecalogistics.api.dto.input.DeliveryInput;
 import com.fonsecaworks.fonsecalogistics.api.mapper.DeliveryModelMapper;
 import com.fonsecaworks.fonsecalogistics.domain.model.Delivery;
 import com.fonsecaworks.fonsecalogistics.domain.repository.DeliveryRepository;
+import com.fonsecaworks.fonsecalogistics.domain.service.DeliveryCheckoutService;
 import com.fonsecaworks.fonsecalogistics.domain.service.DeliveryRequestService;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +32,7 @@ public class DeliveryController {
 
 	private final DeliveryRepository deliveryRepository;
 	private final DeliveryRequestService deliveryRequestService;
+	private final DeliveryCheckoutService deliveryCheckoutService;
 	private final DeliveryModelMapper deliveryModelMapper;
 	
 	@GetMapping
@@ -53,5 +56,11 @@ public class DeliveryController {
 		Delivery newDelivery = deliveryModelMapper.toEntity(deliveryInput);
 		Delivery requestedDelivery = deliveryRequestService.createDeliveryRequest(newDelivery);
 		return deliveryModelMapper.toDTO(requestedDelivery);
+	}
+	
+	@PutMapping("/{deliveryId}/checkout")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void checkoutDelivery(@PathVariable Long deliveryId) {
+		deliveryCheckoutService.checkoutDelivery(deliveryId);
 	}
 }
