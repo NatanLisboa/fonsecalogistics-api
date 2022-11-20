@@ -4,8 +4,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.fonsecaworks.fonsecalogistics.domain.exception.CustomerNotFoundException;
-import com.fonsecaworks.fonsecalogistics.domain.exception.EmailAlreadyUsedException;
+import com.fonsecaworks.fonsecalogistics.domain.exception.BusinessRuleException;
 import com.fonsecaworks.fonsecalogistics.domain.model.Customer;
 import com.fonsecaworks.fonsecalogistics.domain.repository.CustomerRepository;
 
@@ -19,7 +18,7 @@ public class CustomerCatalogService {
 	
 	public Customer findCustomerById(Long customerId) {
 		return customerRepository.findById(customerId)
-				.orElseThrow(() -> new CustomerNotFoundException("Customer not found with this id"));
+				.orElseThrow(() -> new BusinessRuleException("Customer not found with this id"));
 		
 	}
 	
@@ -30,7 +29,7 @@ public class CustomerCatalogService {
 				.anyMatch(alreadyExistentCustomer -> !alreadyExistentCustomer.equals(customer));
 		
 		if (emailAlreadyUsed) {
-			throw new EmailAlreadyUsedException("There is already a customer registered with this email");
+			throw new BusinessRuleException("There is already a customer registered with this email");
 		}
 		
 		return customerRepository.save(customer);

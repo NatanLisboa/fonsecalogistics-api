@@ -1,11 +1,11 @@
 package com.fonsecaworks.fonsecalogistics.domain.exception;
 
-public class CustomerNotFoundException extends RuntimeException {
-
+public class BusinessRuleException extends RuntimeException {
+	
 	private static final long serialVersionUID = 1L;
 
-	public CustomerNotFoundException(String message) {
+	public BusinessRuleException(String message) {
 		super(message);
 	}
-	
+
 }

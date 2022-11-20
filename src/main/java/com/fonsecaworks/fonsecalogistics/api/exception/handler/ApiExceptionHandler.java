@@ -18,8 +18,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fonsecaworks.fonsecalogistics.api.exception.BadRequestException;
-import com.fonsecaworks.fonsecalogistics.domain.exception.CustomerNotFoundException;
-import com.fonsecaworks.fonsecalogistics.domain.exception.EmailAlreadyUsedException;
+import com.fonsecaworks.fonsecalogistics.domain.exception.BusinessRuleException;
+import com.fonsecaworks.fonsecalogistics.domain.exception.EntityNotFoundException;
 
 import lombok.AllArgsConstructor;
 
@@ -53,34 +53,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, badRequestException, headers, status, request);
 	}
 	
-	@ExceptionHandler(EmailAlreadyUsedException.class)
-	public ResponseEntity<Object> handleEmailAlreadyUsedException(EmailAlreadyUsedException customerEmailAlreadyUsedException, WebRequest request) {
+	@ExceptionHandler(BusinessRuleException.class)
+	public ResponseEntity<Object> handleBusinessRuleException(BusinessRuleException businessRuleException, WebRequest request) {
 		
 		HttpStatus status = HttpStatus.BAD_REQUEST; 
 		 
 		BadRequestException badRequestException = new BadRequestException();
 		badRequestException.setStatus(status.value());
 		badRequestException.setDateTime(OffsetDateTime.now());
-		badRequestException.setTitle(customerEmailAlreadyUsedException.getMessage());
+		badRequestException.setTitle(businessRuleException.getMessage());
 		
-		return handleExceptionInternal(customerEmailAlreadyUsedException, badRequestException, new HttpHeaders(), status, request);
+		return handleExceptionInternal(businessRuleException, badRequestException, new HttpHeaders(), status, request);
 				
 	}
 	
-	@ExceptionHandler(CustomerNotFoundException.class)
-	public ResponseEntity<Object> handleEmailAlreadyUsedException(CustomerNotFoundException customerNotFoundException, WebRequest request) {
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException entityNotFoundException, WebRequest request) {
 		
-		HttpStatus status = HttpStatus.BAD_REQUEST; 
+		HttpStatus status = HttpStatus.NOT_FOUND; 
 		 
 		BadRequestException badRequestException = new BadRequestException();
 		badRequestException.setStatus(status.value());
 		badRequestException.setDateTime(OffsetDateTime.now());
-		badRequestException.setTitle(customerNotFoundException.getMessage());
+		badRequestException.setTitle(entityNotFoundException.getMessage());
 		
-		return handleExceptionInternal(customerNotFoundException, badRequestException, new HttpHeaders(), status, request);
+		return handleExceptionInternal(entityNotFoundException, badRequestException, new HttpHeaders(), status, request);
 				
 	}
-	
-	
 	
 }

@@ -1,11 +1,11 @@
 package com.fonsecaworks.fonsecalogistics.domain.exception;
 
-public class EmailAlreadyUsedException extends RuntimeException {
+public class EntityNotFoundException extends BusinessRuleException {
 
 	private static final long serialVersionUID = 1L;
 
-	public EmailAlreadyUsedException(String message) {
+	public EntityNotFoundException(String message) {
 		super(message);
-	}
+	}	
 	
 }
